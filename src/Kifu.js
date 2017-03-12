@@ -180,9 +180,6 @@ export default class Kifu extends React.Component {
                             <div className="mochi">
                                 <KifuList onChange={this.onChangeKifuList} kifu={this.state.player.getReadableKifuState()} tesuu={this.state.player.tesuu} />
                                 <ul className="lines">
-                                    <li className="fork">
-                                        <ForkList onChange={this.onChangeForkList} forks={this.state.player.getReadableForkKifu()} nowMove={this.state.player.tesuu<this.state.player.getMaxTesuu() ? this.state.player.getReadableKifu(this.state.player.tesuu+1) : null} />
-                                    </li>
                                     <li><button className="dl" onClick={this.onClickDl} disabled={!this.clickDlAvailable()}>棋譜保存</button></li>
 
                                     <li>
@@ -218,6 +215,11 @@ export default class Kifu extends React.Component {
                             <Hand color={reversed?1:0} data={state.hands[reversed?1:0]} playerName={players[reversed?1:0]} ImageDirectoryPath={this.props.ImageDirectoryPath} onInputMove={this.onInputMove} reversed={reversed}/>
                         </div>
                     </td>
+                    <td>
+                        <div className="mochi">
+                            <ForkList onChange={this.onChangeForkList} forks={this.state.player.getReadableForkKifu()} nowMove={this.state.player.tesuu<this.state.player.getMaxTesuu() ? this.state.player.getReadableKifu(this.state.player.tesuu+1) : null} />
+                        </div>
+                   </td>
                 </tr>
                 <tr>
                     <td colSpan="3" style={{textAlign:"center"}}>
