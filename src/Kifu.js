@@ -133,7 +133,11 @@ export default class Kifu extends React.Component {
         this.setState(this.state);
     }
     forkAndForward(num){
-        this.state.player.forkAndForward(num);
+        if (num == 'top') {
+            this.state.player.forward();
+        } else {
+            this.state.player.forkAndForward(num);
+        }
         console.log(this.state.player)
         this.setState(this.state);
     }
