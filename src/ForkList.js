@@ -6,9 +6,12 @@ export default class ForkList extends React.Component {
         var forks = this.props.forks;
         var nowMove = this.props.nowMove;
         return (
-            <ul>
-                {[<li><a onClick={e => {this.props.onChange("top")}}>{nowMove}</a></li>].concat(
-                 forks.map((fork, i) => <li><a onClick={e => {this.props.onChange("" + i)}}>{fork}</a></li>))}
+            <ul className="lines" onClick={e => {
+              if (e.target.tagName != 'BUTTON') { return; }
+              var num = e.target.dataset.num;
+              this.props.onChange(num)}}>
+                {[<li key={nowMove}><button data-num="top">{nowMove}</button></li>].concat(
+                 forks.map((fork, i) => <li key={fork}><button data-num={i}>{fork}</button></li>))}
             </ul>
           /*
             <select className="forklist" value="top" onChange={e => {
