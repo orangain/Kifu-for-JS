@@ -102,7 +102,21 @@ export default class Kifu extends React.Component {
         }
     }
     onClickDl(){
-        if(this.state.filename) window.open(this.state.filename);
+        const jkfString = this.state.player.toJKF();
+        const jkfBlob = new Blob([jkfString], {"type" : "appliation/json"});
+        const a = document.createElement('a');
+        a.href = window.URL.createObjectURL(jkfBlob);
+        let filename = 'kifu.jkf';
+        if (this.state.filename) {
+            const splits = this.state.filename.split('/');
+            filename = splits[splits.length - 1];
+        }
+        a.download = filename;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        //if(this.state.filename) window.open(this.state.filename);
     }
     clickDlAvailable(){
         return this.state.filename;
