@@ -135,6 +135,12 @@ export default class Kifu extends React.Component {
     onChangeForkList(n){
         this.forkAndForward(n);
     }
+    onChangeComments(commentString) {
+        const comments = commentString.split('\n');
+        const player = this.state.player;
+        player.getMoveFormat(player.tesuu).comments = comments;
+        this.setState(this.state);
+    }
     onInputMove(move){
         try{
             if(!this.state.player.inputMove(move)){
@@ -259,7 +265,7 @@ export default class Kifu extends React.Component {
                             <li><button onClick={this.onClickReverse}>反転</button></li>
                             <li><button onClick={this.onClickCredit}>credit</button></li>
                         </ul>
-                        <textarea rows="10" className="comment" disabled value={this.state.player.getComments().join("\n")}></textarea>
+                        <textarea rows="10" className="comment" onChange={(e) => { this.onChangeComments(e.target.value); }} value={this.state.player.getComments().join("\n")}></textarea>
                     </td>
                 </tr>
                 </tbody>
