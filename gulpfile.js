@@ -9,6 +9,7 @@ var source = require('vinyl-source-stream');
 var concat = require('gulp-concat');
 var merge = require('merge2');
 var streamify = require('gulp-streamify');
+var webserver = require('gulp-webserver');
 
 var BROWSERIFY_SRC_FILE = "./src/index.js";
 var BROWSERIFY_OUT_NAME = "./kifuforjs.js";
@@ -56,5 +57,14 @@ gulp.task("uglify", function () {
 });
 gulp.task("watch", function(){
 	gulp.watch(UGLIFY_SRC_FILE, ["uglify"]);
+	getBrowserify(true)();
+});
+gulp.task("serve", function() {
+  gulp.src('.')
+    .pipe(webserver({
+      host: 'localhost',
+      port: 8000,
+      livereload: true,
+    }));
 	getBrowserify(true)();
 });
