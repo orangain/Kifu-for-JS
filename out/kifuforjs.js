@@ -36056,7 +36056,7 @@ var KifuTreeNode = function (_React$Component) {
                 null,
                 _react2.default.createElement(
                     "div",
-                    null,
+                    { className: "kifu-tree-node" },
                     _react2.default.createElement(
                         "span",
                         { className: kifuTreeNode.isCurrent ? "current" : "",
@@ -36065,7 +36065,7 @@ var KifuTreeNode = function (_React$Component) {
                     ),
                     _react2.default.createElement(
                         "span",
-                        { className: "controls", style: { display: 'none' } },
+                        { className: "controls" },
                         _react2.default.createElement(
                             "span",
                             null,

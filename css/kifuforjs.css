@@ -146,3 +146,9 @@
 .current {
 	background-color: orange;
 }
+.controls {
+	display: none;
+}
+.kifu-tree-node:hover > .controls {
+	display: inline;
+}

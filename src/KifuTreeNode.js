@@ -5,10 +5,10 @@ export default class KifuTreeNode extends React.Component {
         const kifuTreeNode = this.props.kifuTreeNode;
         return (
             <li>
-                <div>
+                <div className="kifu-tree-node">
                     <span className={kifuTreeNode.isCurrent ? "current" : ""}
                         data-path={JSON.stringify(kifuTreeNode.path)}>{kifuTreeNode.readableKifu}</span>
-                    <span className="controls" style={{display: 'none'}}>
+                    <span className="controls">
                         <span>↑</span><span>↓</span><span>×</span>
                     </span>
                 </div>
