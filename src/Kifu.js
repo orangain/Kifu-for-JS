@@ -6,6 +6,7 @@ import HTML5Backend, {NativeTypes} from "react-dnd-html5-backend";
 import Board from "./Board.js";
 import ForkList from "./ForkList.js";
 import KifuList from "./KifuList.js";
+import KifuTree from "./KifuTree.js";
 import Hand from "./Hand.js";
 import {version, loadFile} from "./util.js"
 
@@ -52,6 +53,8 @@ export default class Kifu extends React.Component {
                 }catch(e){
                     this.logError("棋譜形式エラー: この棋譜ファイルを @na2hiro までお寄せいただければ対応します．\n=== 棋譜 ===\n"+data);
                 }
+                this.updateKifuTree();
+                this.setState(this.state);
             });
         } else {
             try{
@@ -172,6 +175,38 @@ export default class Kifu extends React.Component {
         this.state.player.go(tesuu);
         this.setState(this.state);
     }
+    updateKifuTree(){
+        const jkf = this.state.player.kifu;
+        
+        const movesToFork = (moves) => {
+            let forks = [];
+            if (moves.length >= 2) {
+                forks.push(moves.slice(1));
+            }
+
+            if (moves[1] && moves[1].forks) {
+                forks = forks.concat(moves[1].forks);
+            }
+            return forks;
+        };
+        const walk = (tesuu, forks) => {
+            return forks.map(moves => createKifuTreeNode(tesuu, moves));
+        };
+        const createKifuTreeNode = (tesuu, moves) => {
+            const move = moves[0];
+            //console.log(tesuu, moves);
+            return {
+                tesuu: tesuu,
+                move: move,
+                readableKifu: tesuu == 0 ? '開始局面' : JKFPlayer.moveToReadableKifu(move),
+                children: walk(tesuu + 1, movesToFork(moves)),
+            };
+        };
+        
+        const kifuTree = createKifuTreeNode(0, jkf.moves);
+        console.log(kifuTree);
+        this.state.kifuTree = kifuTree;
+    }
     render(){
         var data = this.state.player.kifu.header;
         var dds = [];
@@ -191,6 +226,7 @@ export default class Kifu extends React.Component {
         var reversed = this.state.reversed;
 
         return this.props.connectDropTarget(
+            <div>
             <table className="kifuforjs" style={{backgroundColor: this.props.isOver ? "silver" : ""}}>
                 <tbody>
                 <tr>
@@ -270,6 +306,10 @@ export default class Kifu extends React.Component {
                 </tr>
                 </tbody>
             </table>
+            <ul>
+                <KifuTree kifuTreeNode={this.state.kifuTree} />
+            </ul>
+            </div>
         );
     }
 }
