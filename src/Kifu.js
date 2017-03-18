@@ -153,6 +153,7 @@ export default class Kifu extends React.Component {
         }catch(e){
             // ignore
         }
+        this.updateKifuTree();
         this.setState(this.state);
     }
     forkAndForward(num){
@@ -162,17 +163,20 @@ export default class Kifu extends React.Component {
             this.state.player.forkAndForward(num);
         }
         console.log(this.state.player)
+        this.updateKifuTree();
         this.setState(this.state);
     }
     goto(tesuu){
         if(isNaN(tesuu)) return;
         this.state.player.goto(tesuu);
+        this.updateKifuTree();
         this.setState(this.state);
     }
     go(tesuu){
         tesuu = Number(tesuu);
         if(isNaN(tesuu)) return;
         this.state.player.go(tesuu);
+        this.updateKifuTree();
         this.setState(this.state);
     }
     gotoPath(path) {
@@ -184,10 +188,12 @@ export default class Kifu extends React.Component {
                 this.state.player.forkAndForward(num - 1);
             }
         });
+        this.updateKifuTree();
         this.setState(this.state);
     }
     updateKifuTree(){
-        const jkf = this.state.player.kifu;
+        const player = this.state.player;
+        const jkf = player.kifu;
         
         const movesToForks = (moves) => {
             let forks = [];
@@ -214,6 +220,13 @@ export default class Kifu extends React.Component {
         };
         
         const kifuTree = createKifuTreeNode(0, jkf.moves, []);
+
+        let currentNode = kifuTree;
+        for (let state of player.getReadableKifuState().slice(1, player.tesuu + 1)) {
+            currentNode = currentNode.children.find(childNode => childNode.readableKifu == state.kifu);
+        }
+        currentNode.isCurrent = true;
+
         console.log(kifuTree);
         this.state.kifuTree = kifuTree;
     }

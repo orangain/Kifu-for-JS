@@ -9,7 +9,7 @@ export default class KifuTree extends React.Component {
         }
 
         return (
-            <li onClick={this.props.onClick}><span data-path={JSON.stringify(kifuTreeNode.path)}>{kifuTreeNode.readableKifu}</span>
+            <li onClick={this.props.onClick}><span className={kifuTreeNode.isCurrent ? "current" : ""} data-path={JSON.stringify(kifuTreeNode.path)}>{kifuTreeNode.readableKifu}</span>
                 <ul>
                     {kifuTreeNode.children.map((childNode, i) => <KifuTree key={childNode.readableKifu} kifuTreeNode={childNode}/>)}
                 </ul>
