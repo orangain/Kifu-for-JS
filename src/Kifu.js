@@ -175,10 +175,21 @@ export default class Kifu extends React.Component {
         this.state.player.go(tesuu);
         this.setState(this.state);
     }
+    gotoPath(path) {
+        this.state.player.goto(0);
+        path.forEach(num => {
+            if (num == 0) {
+                this.state.player.forward();
+            } else {
+                this.state.player.forkAndForward(num - 1);
+            }
+        });
+        this.setState(this.state);
+    }
     updateKifuTree(){
         const jkf = this.state.player.kifu;
         
-        const movesToFork = (moves) => {
+        const movesToForks = (moves) => {
             let forks = [];
             if (moves.length >= 2) {
                 forks.push(moves.slice(1));
@@ -189,21 +200,20 @@ export default class Kifu extends React.Component {
             }
             return forks;
         };
-        const walk = (tesuu, forks) => {
-            return forks.map(moves => createKifuTreeNode(tesuu, moves));
-        };
-        const createKifuTreeNode = (tesuu, moves) => {
+        
+        const createKifuTreeNode = (tesuu, moves, path) => {
             const move = moves[0];
             //console.log(tesuu, moves);
             return {
                 tesuu: tesuu,
                 move: move,
                 readableKifu: tesuu == 0 ? '開始局面' : JKFPlayer.moveToReadableKifu(move),
-                children: walk(tesuu + 1, movesToFork(moves)),
+                path: path,
+                children: movesToForks(moves).map((moves, i) => createKifuTreeNode(tesuu + 1, moves, path.concat([i]))),
             };
         };
         
-        const kifuTree = createKifuTreeNode(0, jkf.moves);
+        const kifuTree = createKifuTreeNode(0, jkf.moves, []);
         console.log(kifuTree);
         this.state.kifuTree = kifuTree;
     }
@@ -307,7 +317,11 @@ export default class Kifu extends React.Component {
                 </tbody>
             </table>
             <ul>
-                <KifuTree kifuTreeNode={this.state.kifuTree} />
+                <KifuTree kifuTreeNode={this.state.kifuTree} onClick={e => {
+                    if (e.target.dataset.path) {
+                        this.gotoPath(JSON.parse(e.target.dataset.path));
+                    }
+                }}/>
             </ul>
             </div>
         );
