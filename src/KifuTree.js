@@ -1,18 +1,16 @@
 import React from "react";
-import {pad} from "./util.js"
+import KifuTreeNode from "./KifuTreeNode.js"
 
 export default class KifuTree extends React.Component {
     render(){
-        const kifuTreeNode = this.props.kifuTreeNode;
-        if (!kifuTreeNode) {
-            return false;
+        if (!this.props.kifuTree) {
+            return (<div>Waiting tree</div>);
         }
 
         return (
-            <li onClick={this.props.onClick}><span className={kifuTreeNode.isCurrent ? "current" : ""} data-path={JSON.stringify(kifuTreeNode.path)}>{kifuTreeNode.readableKifu}</span>
-                <ul>
-                    {kifuTreeNode.children.map((childNode, i) => <KifuTree key={childNode.readableKifu} kifuTreeNode={childNode}/>)}
-                </ul>
-            </li>);
+            <ul onClick={this.props.onClick}>
+                <KifuTreeNode kifuTreeNode={this.props.kifuTree} />
+            </ul>
+        );
     }
 }

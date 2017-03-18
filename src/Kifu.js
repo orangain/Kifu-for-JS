@@ -329,13 +329,11 @@ export default class Kifu extends React.Component {
                 </tr>
                 </tbody>
             </table>
-            <ul>
-                <KifuTree kifuTreeNode={this.state.kifuTree} onClick={e => {
+            <KifuTree kifuTree={this.state.kifuTree} onClick={e => {
                     if (e.target.dataset.path) {
                         this.gotoPath(JSON.parse(e.target.dataset.path));
                     }
                 }}/>
-            </ul>
             </div>
         );
     }
