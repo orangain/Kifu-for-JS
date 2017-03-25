@@ -67,6 +67,7 @@ export default class Kifu extends React.Component {
         }
     }
     componentWillReceiveProps(nextProps){
+        console.log("componentWillReceiveProps", nextProps);
         if(this.props.kifu!=nextProps.kifu){
             try{
                 JKFPlayer.log("reload");
@@ -223,15 +224,19 @@ export default class Kifu extends React.Component {
         };
         
         const kifuTree = createKifuTreeNode(0, jkf.moves, []);
-
-        let currentNode = kifuTree;
-        for (let state of player.getReadableKifuState().slice(1, player.tesuu + 1)) {
-            currentNode = currentNode.children.find(childNode => childNode.readableKifu == state.kifu);
-        }
-        currentNode.isCurrent = true;
+        this.findCurrentNode(kifuTree).isCurrent = true;
 
         console.log(kifuTree);
         this.state.kifuTree = kifuTree;
+    }
+    findCurrentNode(kifuTree) {
+        const player = this.state.player;
+
+        let currentNode = kifuTree || this.state.kifuTree;
+        for (let state of player.getReadableKifuState().slice(1, player.tesuu + 1)) {
+            currentNode = currentNode.children.find(childNode => childNode.readableKifu == state.kifu);
+        }
+        return currentNode;
     }
     updateJKFFromKifuTree() {
         const nodesToMoveFormats = (nodes) => {
@@ -255,7 +260,13 @@ export default class Kifu extends React.Component {
             return [primaryMoveFormat].concat(nodesToMoveFormats(primaryNode.children));
         };
 
+        const currentNode = this.findCurrentNode();
+        const currentPath = currentNode ? currentNode.path :[];  // curentNode may be undefined if the node was removed
+
         this.state.player.kifu.moves = [this.state.player.kifu.moves[0]].concat(nodesToMoveFormats(this.state.kifuTree.children));
+        this.state.player = new JKFPlayer(this.state.player.kifu);
+
+        this.gotoPath(currentPath);
     }
     render(){
         var data = this.state.player.kifu.header;
@@ -361,8 +372,6 @@ export default class Kifu extends React.Component {
                     this.gotoPath(JSON.parse(e.target.dataset.path));
                 } else if (e.target.classList.contains('up') || e.target.classList.contains('down') || e.target.classList.contains('delete')) {
                     this.updateJKFFromKifuTree();
-                    this.updateKifuTree();
-                    this.setState(this.state);
                 }
             }} />
             </div>
