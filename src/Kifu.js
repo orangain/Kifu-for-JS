@@ -330,10 +330,12 @@ export default class Kifu extends React.Component {
                 </tbody>
             </table>
             <KifuTree kifuTree={this.state.kifuTree} onClick={e => {
-                    if (e.target.dataset.path) {
-                        this.gotoPath(JSON.parse(e.target.dataset.path));
-                    }
-                }}/>
+                if (e.target.dataset.path) {
+                    this.gotoPath(JSON.parse(e.target.dataset.path));
+                } else if (e.target.classList.contains('up') || e.target.classList.contains('down') || e.target.classList.contains('delete')) {
+                    this.setState(this.state);
+                }
+            }} />
             </div>
         );
     }
