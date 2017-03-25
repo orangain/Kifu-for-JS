@@ -195,27 +195,27 @@ export default class Kifu extends React.Component {
         const player = this.state.player;
         const jkf = player.kifu;
         
-        const movesToForks = (moves) => {
+        const moveFormatsToForks = (moveFormats) => {
             let forks = [];
-            if (moves.length >= 2) {
-                forks.push(moves.slice(1));
+            if (moveFormats.length >= 2) {
+                forks.push(moveFormats.slice(1));
             }
 
-            if (moves[1] && moves[1].forks) {
-                forks = forks.concat(moves[1].forks);
+            if (moveFormats[1] && moveFormats[1].forks) {
+                forks = forks.concat(moveFormats[1].forks);
             }
             return forks;
         };
         
-        const createKifuTreeNode = (tesuu, moves, path) => {
-            const move = moves[0];
-            //console.log(tesuu, moves);
+        const createKifuTreeNode = (tesuu, moveFormats, path) => {
+            const moveFormat = moveFormats[0];
+            //console.log(tesuu, moveFormats);
             return {
                 tesuu: tesuu,
-                move: move,
-                readableKifu: tesuu == 0 ? '開始局面' : JKFPlayer.moveToReadableKifu(move),
+                move: moveFormat.move,
+                readableKifu: tesuu == 0 ? '開始局面' : JKFPlayer.moveToReadableKifu(moveFormat),
                 path: path,
-                children: movesToForks(moves).map((moves, i) => createKifuTreeNode(tesuu + 1, moves, path.concat([i]))),
+                children: moveFormatsToForks(moveFormats).map((moveFormatsOfFork, i) => createKifuTreeNode(tesuu + 1, moveFormatsOfFork, path.concat([i]))),
             };
         };
         
