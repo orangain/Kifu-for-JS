@@ -234,31 +234,28 @@ export default class Kifu extends React.Component {
         this.state.kifuTree = kifuTree;
     }
     updateJKFFromKifuTree() {
-        const nodeToBasicMoveFormat = (node) => {
-            return {
-                comments: node.comments,
-                move: node.move,
-                time: node.time,
-                special: node.special,
-            };
-        }
+        const nodesToMoveFormats = (nodes) => {
+            const primaryNode = nodes[0];
 
-        const nodeToMoves = (node) => {
-            const primaryChildNode = node.children[0];
-            if (!primaryChildNode) {
+            if (!primaryNode) {
                 return [];
             }
 
-            const moveFormat = nodeToBasicMoveFormat(primaryChildNode);
+            const primaryMoveFormat = {
+                comments: primaryNode.comments,
+                move: primaryNode.move,
+                time: primaryNode.time,
+                special: primaryNode.special,
+            };
 
-            if (node.children.length >= 2) {
-                moveFormat.forks = node.children.slice(1).map(childNode => [nodeToBasicMoveFormat(childNode)].concat(nodeToMoves(childNode)));
+            if (nodes.length >= 2) {
+                primaryMoveFormat.forks = nodes.slice(1).map(childNode => nodesToMoveFormats([childNode]));
             }
+            
+            return [primaryMoveFormat].concat(nodesToMoveFormats(primaryNode.children));
+        };
 
-            return [moveFormat].concat(nodeToMoves(primaryChildNode));
-        }
-
-        this.state.player.kifu.moves = [this.state.player.kifu.moves[0]].concat(nodeToMoves(this.state.kifuTree));
+        this.state.player.kifu.moves = [this.state.player.kifu.moves[0]].concat(nodesToMoveFormats(this.state.kifuTree.children));
     }
     render(){
         var data = this.state.player.kifu.header;
