@@ -1,9 +1,10 @@
 import React from "react";
 
 export default class KifuTreeNode extends React.Component {
-    moveUpFork(index){
+    moveUpFork(e, index){
         const node = this.props.kifuTreeNode;
         if (index == 0) {
+            e.stopPropagation();
             return; // do nothing
         }
 
@@ -11,9 +12,10 @@ export default class KifuTreeNode extends React.Component {
         node.children[index] = node.children[index - 1];
         node.children[index - 1] = childNode;
     }
-    moveDownFork(index){
+    moveDownFork(e, index){
         const node = this.props.kifuTreeNode;
         if (index == node.children.length - 1) {
+            e.stopPropagation();
             return; // do nothing
         }
 
@@ -21,7 +23,7 @@ export default class KifuTreeNode extends React.Component {
         node.children[index] = node.children[index + 1];
         node.children[index + 1] = childNode;
     }
-    removeFork(index){
+    removeFork(e, index){
         const node = this.props.kifuTreeNode;
         node.children.splice(index, 1);
     }
@@ -33,15 +35,15 @@ export default class KifuTreeNode extends React.Component {
                     <span className={"readable-kifu " + (kifuTreeNode.isCurrent ? "current" : "")}
                         data-path={JSON.stringify(kifuTreeNode.path)}>{kifuTreeNode.readableKifu}</span>
                     <span className="controls">
-                        <span className="up" onClick={e => {this.props.onClickUp()}}>↑</span>
-                        <span className="down" onClick={e => {this.props.onClickDown()}}>↓</span>
-                        <span className="delete" onClick={e => {this.props.onClickRemove()}}>×</span>
+                        <span className="up" onClick={e => {this.props.onClickUp(e)}}>↑</span>
+                        <span className="down" onClick={e => {this.props.onClickDown(e)}}>↓</span>
+                        <span className="delete" onClick={e => {this.props.onClickRemove(e)}}>×</span>
                     </span>
                 </div>
                 <ul>
                     {kifuTreeNode.children.map((childNode, i) =>
                         <KifuTreeNode key={childNode.readableKifu} kifuTreeNode={childNode}
-                         onClickUp={e => this.moveUpFork(i)} onClickDown={e => this.moveDownFork(i)} onClickRemove={e => this.removeFork(i)}/>)}
+                         onClickUp={e => this.moveUpFork(e, i)} onClickDown={e => this.moveDownFork(e, i)} onClickRemove={e => this.removeFork(e, i)}/>)}
                 </ul>
             </li>);
     }
