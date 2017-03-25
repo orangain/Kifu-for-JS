@@ -105,7 +105,7 @@ export default class Kifu extends React.Component {
         }
     }
     onClickDl(){
-        const jkfString = this.state.player.toJKF();
+        const jkfString = JSON.stringify(this.state.player.kifu, null, '  ');
         const jkfBlob = new Blob([jkfString], {"type" : "appliation/json"});
         const a = document.createElement('a');
         a.href = window.URL.createObjectURL(jkfBlob);
@@ -212,7 +212,10 @@ export default class Kifu extends React.Component {
             //console.log(tesuu, moveFormats);
             return {
                 tesuu: tesuu,
+                comments: moveFormat.comments,
                 move: moveFormat.move,
+                time: moveFormat.time,
+                special: moveFormat.special,
                 readableKifu: tesuu == 0 ? '開始局面' : JKFPlayer.moveToReadableKifu(moveFormat),
                 path: path,
                 children: moveFormatsToForks(moveFormats).map((moveFormatsOfFork, i) => createKifuTreeNode(tesuu + 1, moveFormatsOfFork, path.concat([i]))),
@@ -229,6 +232,33 @@ export default class Kifu extends React.Component {
 
         console.log(kifuTree);
         this.state.kifuTree = kifuTree;
+    }
+    updateJKFFromKifuTree() {
+        const nodeToBasicMoveFormat = (node) => {
+            return {
+                comments: node.comments,
+                move: node.move,
+                time: node.time,
+                special: node.special,
+            };
+        }
+
+        const nodeToMoves = (node) => {
+            const primaryChildNode = node.children[0];
+            if (!primaryChildNode) {
+                return [];
+            }
+
+            const moveFormat = nodeToBasicMoveFormat(primaryChildNode);
+
+            if (node.children.length >= 2) {
+                moveFormat.forks = node.children.slice(1).map(childNode => [nodeToBasicMoveFormat(childNode)].concat(nodeToMoves(childNode)));
+            }
+
+            return [moveFormat].concat(nodeToMoves(primaryChildNode));
+        }
+
+        this.state.player.kifu.moves = [this.state.player.kifu.moves[0]].concat(nodeToMoves(this.state.kifuTree));
     }
     render(){
         var data = this.state.player.kifu.header;
@@ -333,6 +363,8 @@ export default class Kifu extends React.Component {
                 if (e.target.dataset.path) {
                     this.gotoPath(JSON.parse(e.target.dataset.path));
                 } else if (e.target.classList.contains('up') || e.target.classList.contains('down') || e.target.classList.contains('delete')) {
+                    this.updateJKFFromKifuTree();
+                    this.updateKifuTree();
                     this.setState(this.state);
                 }
             }} />
