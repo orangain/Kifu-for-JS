@@ -6,6 +6,9 @@
     "先手": "",
     "後手": ""
   },
+  "initial": {
+    "preset": "HIRATE"
+  },
   "moves": [
     {},
     {
@@ -779,8 +782,5 @@
       },
       "special": "TORYO"
     }
-  ],
-  "initial": {
-    "preset": "HIRATE"
-  }
+  ]
 }

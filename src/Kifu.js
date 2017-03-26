@@ -106,7 +106,13 @@ export default class Kifu extends React.Component {
         }
     }
     onClickDl(){
-        const jkfString = JSON.stringify(this.state.player.kifu, null, '  ');
+        // Ensure key order for readability
+        const kifu = {
+            header: this.state.player.kifu.header,
+            initial: this.state.player.kifu.initial,
+            moves: this.state.player.kifu.moves,
+        };
+        const jkfString = JSON.stringify(kifu, null, '  ');
         const jkfBlob = new Blob([jkfString], {"type" : "appliation/json"});
         const a = document.createElement('a');
         a.href = window.URL.createObjectURL(jkfBlob);
@@ -246,16 +252,15 @@ export default class Kifu extends React.Component {
                 return [];
             }
 
+            // key order is important for readability
             const primaryMoveFormat = {
                 comments: primaryNode.comments,
                 move: primaryNode.move,
                 time: primaryNode.time,
                 special: primaryNode.special,
+                forks: nodes.length >= 2 ? nodes.slice(1).map(childNode => nodesToMoveFormats([childNode]))
+                                         : undefined,
             };
-
-            if (nodes.length >= 2) {
-                primaryMoveFormat.forks = nodes.slice(1).map(childNode => nodesToMoveFormats([childNode]));
-            }
             
             return [primaryMoveFormat].concat(nodesToMoveFormats(primaryNode.children));
         };
