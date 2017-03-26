@@ -16,7 +16,7 @@ export default class ForkList extends React.Component {
         const children = this.props.kifuTreeNode.children;
         return (
             <ul className="lines" onClick={e => {this.onClickButton(e)}}>
-                {children.map((childNode, i) => <li key={i}><button data-index={i} title={childNode.comment}>{childNode.readableKifu}{childNode.comment ? ' *' : ''}</button></li>)}
+                {children.map((childNode, i) => <li key={i}><button data-index={i} title={childNode.comment}>{childNode.readableKifu + (childNode.comment ? ' *' : '')}</button></li>)}
             </ul>
         );
     }

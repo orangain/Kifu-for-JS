@@ -34,7 +34,7 @@ export default class KifuTreeNode extends React.Component {
                 <div className="kifu-tree-node">
                     <span className={"readable-kifu " + (kifuTreeNode.isCurrent ? "current" : "")}
                         data-path={JSON.stringify(kifuTreeNode.path)}
-                        title={kifuTreeNode.comment}>{kifuTreeNode.readableKifu}{kifuTreeNode.comment ? ' *' : ''}</span>
+                        title={kifuTreeNode.comment}>{kifuTreeNode.readableKifu + (kifuTreeNode.comment ? ' *' : '')}</span>
                     <span className="controls">
                         <span className="up" onClick={e => {this.props.onClickUp(e)}}>↑</span>
                         <span className="down" onClick={e => {this.props.onClickDown(e)}}>↓</span>
