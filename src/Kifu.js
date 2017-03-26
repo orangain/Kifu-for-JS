@@ -338,7 +338,7 @@ export default class Kifu extends React.Component {
                         </div>
                     </td>
                     <td>
-                        <div className="mochi">
+                        <div className="forks">
                             <ForkList onChange={this.onChangeForkList} kifuTreeNode={this.findCurrentNode()} />
                         </div>
                    </td>

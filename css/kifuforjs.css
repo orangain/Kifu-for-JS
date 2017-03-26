@@ -147,6 +147,13 @@
 	width: 100%;
 }
 
+.kifuforjs .forks {
+	width: 120px;
+	height: 360px;
+}
+.kifuforjs .forks ul.lines button{
+	height: 6%;
+}
 .kifu-tree-node .readable-kifu {
 	cursor: pointer;
 }
