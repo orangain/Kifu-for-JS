@@ -254,7 +254,7 @@ export default class Kifu extends React.Component {
 
             // key order is important for readability
             const primaryMoveFormat = {
-                comments: primaryNode.comment.split('\n'),
+                comments: primaryNode.comment ? primaryNode.comment.split('\n') : undefined,
                 move: primaryNode.move,
                 time: primaryNode.time,
                 special: primaryNode.special,
