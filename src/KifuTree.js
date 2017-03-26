@@ -8,7 +8,7 @@ export default class KifuTree extends React.Component {
         }
 
         return (
-            <ul onClick={this.props.onClick}>
+            <ul className="kifu-tree" onClick={this.props.onClick}>
                 <KifuTreeNode kifuTreeNode={this.props.kifuTree} />
             </ul>
         );
