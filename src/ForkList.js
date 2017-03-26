@@ -1,28 +1,23 @@
 import React from "react"
 
 export default class ForkList extends React.Component {
+    onClickButton(e) {
+        if (e.target.tagName != 'BUTTON') {
+            return;
+        }
+        const index = e.target.dataset.index;
+        const num = index == 0 ? 'top' : index - 1;
+        this.props.onChange(num);
+    }
     render(){
-        // 分岐
-        var forks = this.props.forks;
-        var nowMove = this.props.nowMove;
+        if (!this.props.kifuTreeNode) {
+            return false;
+        }
+        const children = this.props.kifuTreeNode.children;
         return (
-            <ul className="lines" onClick={e => {
-              if (e.target.tagName != 'BUTTON') { return; }
-              var num = e.target.dataset.num;
-              this.props.onChange(num)}}>
-                {[<li key={nowMove}><button data-num="top">{nowMove}</button></li>].concat(
-                 forks.map((fork, i) => <li key={fork}><button data-num={i}>{fork}</button></li>))}
+            <ul className="lines" onClick={e => {this.onClickButton(e)}}>
+                {children.map((childNode, i) => <li key={i}><button data-index={i} title={childNode.comment}>{childNode.readableKifu}{childNode.comment ? ' *' : ''}</button></li>)}
             </ul>
-          /*
-            <select className="forklist" value="top" onChange={e => {
-				this.props.onChange(e.target.value);
-			}} ref="select" disabled={forks.length==0}>
-                {forks.length>0
-                    ? [<option key={this.props.nowMove} value="top">{this.props.nowMove}</option>].concat(
-                        forks.map((fork, i) => <option key={fork} value={i}>{fork}</option>))
-                    : <option value="top">変化なし</option>}
-            </select>
-            */
         );
     }
 }

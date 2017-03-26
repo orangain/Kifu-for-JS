@@ -219,7 +219,7 @@ export default class Kifu extends React.Component {
             //console.log(tesuu, moveFormats);
             return {
                 tesuu: tesuu,
-                comments: moveFormat.comments,
+                comment: moveFormat.comments ? moveFormat.comments.join('\n') : undefined,
                 move: moveFormat.move,
                 time: moveFormat.time,
                 special: moveFormat.special,
@@ -339,7 +339,7 @@ export default class Kifu extends React.Component {
                     </td>
                     <td>
                         <div className="mochi">
-                            <ForkList onChange={this.onChangeForkList} forks={this.state.player.getReadableForkKifu()} nowMove={this.state.player.tesuu<this.state.player.getMaxTesuu() ? this.state.player.getReadableKifu(this.state.player.tesuu+1) : null} />
+                            <ForkList onChange={this.onChangeForkList} kifuTreeNode={this.findCurrentNode()} />
                         </div>
                    </td>
                 </tr>
