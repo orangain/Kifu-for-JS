@@ -9,6 +9,7 @@ var source = require('vinyl-source-stream');
 var concat = require('gulp-concat');
 var merge = require('merge2');
 var streamify = require('gulp-streamify');
+var babel = require('gulp-babel');
 
 var BROWSERIFY_SRC_FILE = "./src/index.js";
 var BROWSERIFY_OUT_NAME = "./kifuforjs.js";
@@ -16,8 +17,10 @@ var BROWSERIFY_OUT_DIR = "./out/";
 var UGLIFY_SRC_FILE = "./src/*bookmarklet.js";
 var UGLIFY_OUT_DIR = "./out/";
 var COPYRIGHT_FILE = "./src/copyright.txt";
+var BABEL_SRC_FILE = "./src/{[A-Z]*,util}.js"; // .src/index.js must not be included.
+var BABEL_OUT_DIR = "./lib/";
 
-gulp.task("build", ["browserify", "uglify"]);
+gulp.task("build", ["browserify", "uglify", "babel"]);
 
 function getBrowserify(watch){
 	var b = (watch ? watchify : id)(browserify({
@@ -57,4 +60,12 @@ gulp.task("uglify", function () {
 gulp.task("watch", function(){
 	gulp.watch(UGLIFY_SRC_FILE, ["uglify"]);
 	getBrowserify(true)();
+});
+gulp.task("babel", function() {
+	gulp.src(BABEL_SRC_FILE)
+		.pipe(babel({
+			presets: ["es2015", "react"],
+			plugins: ["transform-decorators-legacy", "add-module-exports"]
+		}))
+		.pipe(gulp.dest(BABEL_OUT_DIR))
 });
